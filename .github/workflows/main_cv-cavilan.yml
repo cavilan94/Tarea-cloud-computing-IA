@@ -1,0 +1,31 @@
+name: Deploy static site to Azure Web App - cv-cavilan
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_CA7653C8BEC1425CBE1B0023EA63E615 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_9BB7A0F3023C4FBFA6257A9B5D1412FD }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_850C7C5B507640DB9D811B5D04229073 }}
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'cv-cavilan'
+          slot-name: 'Production'
+          package: .         
